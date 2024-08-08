@@ -1,0 +1,93 @@
+include:
+  - compose-base.yaml
+
+name: md
+
+services:
+  ship-app:
+    annotations:
+      com.chillysoftware.md.ship.app.lang: go
+    build:
+      context: ../..
+      dockerfile: ./deploy/docker/app/Dockerfile
+    depends_on:
+      ship-redis-storage:
+        condition: service_healthy
+    env_file:
+      - path: ./.env
+        required: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    labels:
+      - "app-identity=magic-delivery"
+      - "app-service=md-ship-app"
+    networks:
+      - ship-public
+      - ship-redis
+      - pl-public
+    ports:
+      - "8080:8080/tcp"
+    read_only: true
+
+  ship-redis-storage:
+    entrypoint: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 1s
+    image: redis
+    labels:
+      - "app-identity=magic-delivery"
+      - "app-service=md-ship-redis-storage"
+    networks:
+      - ship-redis
+    volumes:
+      - ship-redis-data:/data
+      - ./redis-storage/redis.conf:/usr/local/etc/redis/redis.conf
+
+  ship-redis-populator:
+    depends_on:
+      - ship-redis-storage
+    entrypoint: ["/redis-populator/populate.sh", "/redis-populator/data.txt"]
+    env_file:
+      - ./.env
+    image: redis
+    labels:
+      - "app-identity=magic-delivery"
+      - "app-service=md-ship-redis-populator"
+    networks:
+      - ship-redis
+    volumes:
+      - ./redis-populator:/redis-populator
+    read_only: true
+
+  ship-redis-backup:
+    depends_on:
+      - ship-redis-storage
+    entrypoint: ["/snapshot-backup.sh"]
+    environment:
+      - BACKUP_PERIOD=10
+    image: bash
+    network_mode: "none"
+    volumes:
+      - ./redis-backup/snapshot-backup.sh:/snapshot-backup.sh
+      - ship-redis-data:/data:ro
+      - ship-backup:/backup
+
+volumes:
+  ship-backup:
+    name: md-ship-backup
+    labels:
+      - "app-identity=magic-delivery"
+      - "app-volume=md-ship-backup"
+  ship-redis-data:
+    name: md-ship-redis-data
+    labels:
+      - "app-identity=magic-delivery"
+      - "app-volume=md-ship-redis-data"

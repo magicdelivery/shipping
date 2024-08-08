@@ -1,0 +1,5 @@
+HSET customer_shipping_address:sample-shipping-address-id-1 Id "sample-shipping-address-id-1" City "Riga" Street "Nicgales 5" Longitude "56.959520" Latitude "24.174040"
+HSET customer:sample-customer-id-1 Id "sample-customer-id-1" Name "Sample customer 1 name" Description "Sample customer 1 description" CreatedAt 2000001 AddressId "sample-shipping-address-id-1"
+HSET customer:sample-customer-id-2 Id "sample-customer-id-2" Name "Sample customer 2 name" Description "Sample customer 2 description" CreatedAt 2000002
+ZADD customers 2000001 "sample-customer-id-1"
+ZADD customers 2000002 "sample-customer-id-2"

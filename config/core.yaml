@@ -1,0 +1,8 @@
+app:
+  listen_addr: 0.0.0.0:8080
+redis_storage:
+  host: localhost
+  port: 6379
+parcel_locker_service:
+  endpoint_url: http://localhost:8081
+  cache_ttl: 60
