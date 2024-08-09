@@ -10,6 +10,7 @@ services:
     build:
       context: ../..
       dockerfile: ./deploy/docker/app/Dockerfile
+    container_name: md-ship-app
     depends_on:
       ship-redis-storage:
         condition: service_healthy
@@ -32,8 +33,10 @@ services:
     ports:
       - "8080:8080/tcp"
     read_only: true
+    restart: unless-stopped
 
   ship-redis-storage:
+    container_name: md-ship-redis-storage
     entrypoint: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -47,11 +50,13 @@ services:
       - "app-service=md-ship-redis-storage"
     networks:
       - ship-redis
+    restart: unless-stopped
     volumes:
       - ship-redis-data:/data
       - ./redis-storage/redis.conf:/usr/local/etc/redis/redis.conf
 
   ship-redis-populator:
+    container_name: md-ship-redis-populator
     depends_on:
       - ship-redis-storage
     entrypoint: ["/redis-populator/populate.sh", "/redis-populator/data.txt"]
@@ -68,6 +73,7 @@ services:
     read_only: true
 
   ship-redis-backup:
+    container_name: md-ship-redis-backup
     depends_on:
       - ship-redis-storage
     entrypoint: ["/snapshot-backup.sh"]
@@ -75,6 +81,7 @@ services:
       - BACKUP_PERIOD=10
     image: bash
     network_mode: "none"
+    restart: unless-stopped
     volumes:
       - ./redis-backup/snapshot-backup.sh:/snapshot-backup.sh
       - ship-redis-data:/data:ro

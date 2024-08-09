@@ -16,5 +16,7 @@ func main() {
 		log.Fatal(err)
 	}
 	r := route.SetupRouter(config)
-	r.Run(config.App.ListenAddr)
+	if err := r.Run(config.App.ListenAddr); err != nil {
+		log.Fatalf("Cannot run http server, %s", err)
+	}
 }

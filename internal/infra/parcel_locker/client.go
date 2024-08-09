@@ -10,6 +10,8 @@ import (
 	"shipping/internal/infra/config"
 	"shipping/internal/infra/operation"
 	"time"
+
+	"github.com/labstack/gommon/log"
 )
 
 const (
@@ -62,7 +64,9 @@ func (cl *ParcelLockerHttpClient) FindParcelLockersNear(ctx context.Context, shi
 	}
 
 	if parcels, err := cl.fetchParcelLockersNear(endpoint); err == nil {
-		cl.cacher.Set(ctx, endpoint, parcels)
+		if err := cl.cacher.Set(ctx, endpoint, parcels); err != nil {
+			log.Fatalf("Unable to store value in cache, %s", err)
+		}
 		return parcels, nil
 	} else {
 		return ParcelLockersNear{}, err
