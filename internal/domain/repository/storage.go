@@ -13,7 +13,7 @@ type CustomerLoader interface {
 
 //go:generate go run github.com/vektra/mockery/v2@v2.43.2 --name=CustomerSaver
 type CustomerSaver interface {
-	SaveCustomer(ctx context.Context, shipping model.Customer) error
+	SaveCustomer(ctx context.Context, customer model.Customer) error
 }
 
 //go:generate go run github.com/vektra/mockery/v2@v2.43.2 --name=CustomerDeleter

@@ -11,7 +11,7 @@ import (
 
 func DeleteCustomer(ctx *gin.Context, deleter repository.CustomerDeleter, loader repository.CustomerLoader) {
 	id := ctx.Params.ByName("id")
-	if shipping, _ := loader.LoadCustomerById(ctx, id); shipping == nil {
+	if customer, _ := loader.LoadCustomerById(ctx, id); customer == nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"id": id, "deleted": false, "message": fmt.Sprintf("Customer info not found by id: %s", id)})
 		return
 	}

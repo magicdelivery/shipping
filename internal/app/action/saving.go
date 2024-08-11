@@ -12,6 +12,7 @@ import (
 func SaveCustomer(ctx *gin.Context, saver repository.CustomerSaver) {
 	var customer model.Customer = model.Customer{}
 	if err := ctx.BindJSON(&customer); err != nil {
+		// ctx.BindJSON sets status code 400, thus the next code definition does not effect
 		ctx.JSON(http.StatusInternalServerError, map[string]any{"customer": customer, "created": false, "message": err.Error()})
 		return
 	}

@@ -17,26 +17,26 @@ func NewRedisSaver(rdb *redis.Client) *RedisSaver {
 	}
 }
 
-func (rs *RedisSaver) SaveCustomer(ctx context.Context, shipping model.Customer) error {
+func (rs *RedisSaver) SaveCustomer(ctx context.Context, customer model.Customer) error {
 	// TODO: add transaction "multi", consider rollback
-	hsetShippingId := makeCustomerId(shipping.Id)
-	hset := rs.rdb.HSet(ctx, hsetShippingId, "Id", shipping.Id)
+	hsetShippingId := makeCustomerId(customer.Id)
+	hset := rs.rdb.HSet(ctx, hsetShippingId, "Id", customer.Id)
 	if hset.Err() != nil {
 		return hset.Err()
 	}
 
-	hset = rs.rdb.HSet(ctx, hsetShippingId, "Name", shipping.Name)
+	hset = rs.rdb.HSet(ctx, hsetShippingId, "Name", customer.Name)
 	if hset.Err() != nil {
 		return hset.Err()
 	}
 
-	hset = rs.rdb.HSet(ctx, hsetShippingId, "CreatedAt", shipping.CreatedAt)
+	hset = rs.rdb.HSet(ctx, hsetShippingId, "CreatedAt", customer.CreatedAt)
 	if hset.Err() != nil {
 		return hset.Err()
 	}
 
-	if shipping.Address != nil {
-		address := shipping.Address
+	if customer.Address != nil {
+		address := customer.Address
 		hsetAddressId := makeCustomerAddressId(address.Id)
 		if hset := rs.rdb.HSet(ctx, hsetAddressId, "Id", address.Id); hset.Err() != nil {
 			return hset.Err()
@@ -59,7 +59,7 @@ func (rs *RedisSaver) SaveCustomer(ctx context.Context, shipping model.Customer)
 		}
 	}
 
-	z := redis.Z{Score: float64(shipping.CreatedAt), Member: shipping.Id}
+	z := redis.Z{Score: float64(customer.CreatedAt), Member: customer.Id}
 	zadd := rs.rdb.ZAdd(ctx, CUSTOMER_LIST, z)
 	if zadd.Err() != nil {
 		return zadd.Err()

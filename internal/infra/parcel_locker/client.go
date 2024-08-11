@@ -20,7 +20,7 @@ const (
 
 //go:generate go run github.com/vektra/mockery/v2@v2.43.2 --name=ParcelLockerClient
 type ParcelLockerClient interface {
-	FindParcelLockersNear(ctx context.Context, shipping *model.Customer, distance float64) (ParcelLockersNear, error)
+	FindParcelLockersNear(ctx context.Context, customer *model.Customer, distance float64) (ParcelLockersNear, error)
 }
 
 type ParcelLockerHttpClient struct {
@@ -46,16 +46,16 @@ func NewParcelLockerClient(config *config.Config) *ParcelLockerHttpClient {
 	}
 }
 
-func (cl *ParcelLockerHttpClient) FindParcelLockersNear(ctx context.Context, shipping *model.Customer, distance float64) (ParcelLockersNear, error) {
-	if shipping.Address == nil {
+func (cl *ParcelLockerHttpClient) FindParcelLockersNear(ctx context.Context, customer *model.Customer, distance float64) (ParcelLockersNear, error) {
+	if customer.Address == nil {
 		return ParcelLockersNear{}, nil
 	}
 
 	endpoint := fmt.Sprintf(
 		parcelLockersDistanceSearchUrlTpl,
 		cl.locationServiceEndpoint,
-		shipping.Address.Longitude,
-		shipping.Address.Latitude,
+		customer.Address.Longitude,
+		customer.Address.Latitude,
 		distance,
 	)
 

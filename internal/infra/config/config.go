@@ -9,7 +9,7 @@ import (
 )
 
 type App struct {
-	ListenAddr string	`yaml:"listen_addr"`
+	ListenAddr string `yaml:"listen_addr"`
 }
 
 type RedisStorage struct {
@@ -23,9 +23,9 @@ type ParcelLockerService struct {
 }
 
 type Config struct {
-	App					App					`yaml:"app"`
-	RedisStorage        RedisStorage		`yaml:"redis_storage"`
-	ParcelLockerService ParcelLockerService	`yaml:"parcel_locker_service"`
+	App                 App                 `yaml:"app"`
+	RedisStorage        RedisStorage        `yaml:"redis_storage"`
+	ParcelLockerService ParcelLockerService `yaml:"parcel_locker_service"`
 }
 
 func NewConfig(configPath string) (*Config, error) {

@@ -1,6 +1,7 @@
 cf = -f deploy/docker/compose.yaml
 af = -f deploy/docker/compose-api-test.yaml
 COVER_FILE ?= coverage.out
+REPORT_FILE ?= coverage.html
 
 build: ## Build docker containers
 	docker compose $(cf) build
@@ -27,6 +28,13 @@ tools: ## Install needed tools, e.g. linter
 	@grep '@' deploy/local/req-tools.txt | xargs -tI % go install %
 lint: tools ## Static check of the sources
 	golangci-lint run --fix
+format: ## Format source code
+	go fmt ./...
+clean: ## Clean the project from built files
+	rm -f $(COVER_FILE) 
+	rm -f $(REPORT_FILE) 
+	rm -f shipping_service 
+	rm -f shipping_service.exe
 help: ## Print this help
 	@grep -E '^[a-zA-Z_-]+:.*## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
@@ -34,26 +42,30 @@ help: ## Print this help
 
 test:
 	go test -count=1 ./...
-shorttest: ## Run unit tests
+coverage: ## Run short unit tests with coverage
 	go test -count=1 -short ./... -coverprofile=$(COVER_FILE)
 	go tool cover -func=$(COVER_FILE) | grep ^total
 $(COVER_FILE):
-	$(MAKE) shorttest
-cover: $(COVER_FILE) ## Output coverage in human readable form in html
-	go tool cover -html=$(COVER_FILE)
+	$(MAKE) coverage
+report: $(COVER_FILE) ## HTML report for test coverage
+	go tool cover -html=$(COVER_FILE) -o $(COVER_FILE).html
 	rm -f $(COVER_FILE)
 hurl: ## Run hurl API testing on localhost installation
 	hurl --variables-file=.\test\api\local-vars .\test\api\customer.hurl
+calc-total-coverage:
+	go tool cover -func coverage.out \
+	| grep "total:" | awk '{print ((int($$3) > 80) != 1) }'
 
 .PHONY: \
 	api-test \
 	build \
-	cover \
+	coverage \
 	down \
 	generate \
 	help \
 	hurl \
 	lint \
+	report \
 	shorttest \
 	test \
 	tools \

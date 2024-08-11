@@ -20,13 +20,13 @@ func NewRedisDeleter(rdb *redis.Client, loader repository.CustomerLoader) *Redis
 }
 
 func (rd *RedisDeleter) DeleteCustomer(ctx context.Context, id string) error {
-	shipping, err := rd.loader.LoadCustomerById(ctx, id)
+	customer, err := rd.loader.LoadCustomerById(ctx, id)
 	if err != nil {
 		return err
 	}
 
-	if shipping.Address != nil {
-		if err := rd.rdb.Unlink(ctx, makeCustomerAddressId(shipping.Address.Id)).Err(); err != nil {
+	if customer.Address != nil {
+		if err := rd.rdb.Unlink(ctx, makeCustomerAddressId(customer.Address.Id)).Err(); err != nil {
 			return err
 		}
 	}
