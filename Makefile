@@ -42,19 +42,20 @@ help: ## Print this help
 
 test:
 	go test -count=1 ./...
-coverage: ## Run short unit tests with coverage
+test-with-coverage:
 	go test -count=1 -short ./... -coverprofile=$(COVER_FILE)
+coverage-total: test-with-coverage ## Run short unit tests with coverage
 	go tool cover -func=$(COVER_FILE) | grep ^total
 $(COVER_FILE):
-	$(MAKE) coverage
+	$(MAKE) test-with-coverage
+calc-total-coverage: test-with-coverage
+	go tool cover -func $(COVER_FILE) \
+	| grep "total:" | awk '{print ((int($$3) > 80) != 1) }'
 report: $(COVER_FILE) ## HTML report for test coverage
 	go tool cover -html=$(COVER_FILE) -o $(COVER_FILE).html
 	rm -f $(COVER_FILE)
 hurl: ## Run hurl API testing on localhost installation
 	hurl --variables-file=.\test\api\local-vars .\test\api\customer.hurl
-calc-total-coverage:
-	go tool cover -func coverage.out \
-	| grep "total:" | awk '{print ((int($$3) > 80) != 1) }'
 
 .PHONY: \
 	api-test \
