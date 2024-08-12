@@ -40,19 +40,19 @@ help: ## Print this help
 
 ## Local testing
 
-test:
+test: ## Run unit tests
 	go test -count=1 ./...
-test-with-coverage:
+test-with-coverage: ## Run short unit tests with coverage
 	go test -count=1 -short ./... -coverprofile=$(COVER_FILE)
-coverage-total: test-with-coverage ## Run short unit tests with coverage
-	go tool cover -func=$(COVER_FILE) | grep ^total
 $(COVER_FILE):
 	$(MAKE) test-with-coverage
-calc-total-coverage: test-with-coverage
+show-total-coverage: $(COVER_FILE) ## Show percentage of coverage
+	go tool cover -func=$(COVER_FILE) | grep ^total
+check-coverage-threshold: $(COVER_FILE) ## Verify if coverage percentage is enough
 	go tool cover -func $(COVER_FILE) \
 	| grep "total:" | awk '{print ((int($$3) > 80) != 1) }'
 report: $(COVER_FILE) ## HTML report for test coverage
-	go tool cover -html=$(COVER_FILE) -o $(COVER_FILE).html
+	go tool cover -html=$(COVER_FILE) -o $(REPORT_FILE)
 	rm -f $(COVER_FILE)
 hurl: ## Run hurl API testing on localhost installation
 	hurl --variables-file=.\test\api\local-vars .\test\api\customer.hurl
@@ -60,14 +60,18 @@ hurl: ## Run hurl API testing on localhost installation
 .PHONY: \
 	api-test \
 	build \
+	check-coverage-threshold \
+	clean \
 	coverage \
 	down \
+	format \
 	generate \
 	help \
 	hurl \
 	lint \
 	report \
-	shorttest \
+	show-total-coverage \
 	test \
+	test-with-coverage \
 	tools \
 	up \
