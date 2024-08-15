@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	parcelLockersDistanceSearchUrlTpl = "%s/parcel-locker-distance-search?longitude=%f&latitude=%f&distance=%f"
+	parcelLockersDistanceSearchURLTpl = "%s/parcel-locker-distance-search?longitude=%f&latitude=%f&distance=%f"
 )
 
 //go:generate go run github.com/vektra/mockery/v2@v2.43.2 --name=ParcelLockerClient
@@ -41,7 +41,7 @@ type ParcelLockersNear struct {
 
 func NewParcelLockerClient(config *config.Config) *ParcelLockerHttpClient {
 	return &ParcelLockerHttpClient{
-		locationServiceEndpoint: config.ParcelLockerService.EndpointUrl,
+		locationServiceEndpoint: config.ParcelLockerService.EndpointURL,
 		cacher:                  NewRedisCacher(config),
 	}
 }
@@ -52,7 +52,7 @@ func (cl *ParcelLockerHttpClient) FindParcelLockersNear(ctx context.Context, cus
 	}
 
 	endpoint := fmt.Sprintf(
-		parcelLockersDistanceSearchUrlTpl,
+		parcelLockersDistanceSearchURLTpl,
 		cl.locationServiceEndpoint,
 		customer.Address.Longitude,
 		customer.Address.Latitude,

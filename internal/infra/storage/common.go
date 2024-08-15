@@ -11,10 +11,10 @@ const (
 	CUSTOMER_LIST = "customers"
 )
 
-func NewRedisClient(config *config.Config) *redis.Client {
+func NewRedisClient(config *config.RedisStorage) *redis.Client {
 	addr := fmt.Sprintf("%s:%d",
-		config.RedisStorage.Host,
-		config.RedisStorage.Port)
+		config.Host,
+		config.Port)
 	return redis.NewClient(&redis.Options{
 		Addr:     addr,
 		Password: "",
@@ -22,7 +22,7 @@ func NewRedisClient(config *config.Config) *redis.Client {
 	})
 }
 
-func DefaultServices(config *config.Config) (*RedisLoader, *RedisSaver, *RedisDeleter) {
+func DefaultServices(config *config.RedisStorage) (*RedisLoader, *RedisSaver, *RedisDeleter) {
 	rdb := NewRedisClient(config)
 	loader := NewRedisLoader(rdb)
 	saver := NewRedisSaver(rdb)

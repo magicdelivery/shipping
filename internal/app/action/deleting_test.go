@@ -18,13 +18,13 @@ import (
 func TestDeleteCustomer_NotFound(t *testing.T) {
 	// Arrange
 	gin.SetMode(gin.TestMode)
-	
+
 	r := gin.Default()
 	customerLoaderMock := mocks.NewCustomerLoader(t)
 	customerLoaderMock.
-	On("LoadCustomerById", mock.Anything, "1").
-	Return(nil, nil)
-	
+		On("LoadCustomerById", mock.Anything, "1").
+		Return(nil, nil)
+
 	customerDeleterMock := mocks.NewCustomerDeleter(t)
 
 	req, _ := http.NewRequest(http.MethodDelete, "/customer/1", nil)
@@ -87,7 +87,7 @@ func TestDeleteCustomer_Found(t *testing.T) {
 			customerLoaderMock := mocks.NewCustomerLoader(t)
 			customerLoaderMock.
 				On("LoadCustomerById", mock.Anything, tt.id).
-				Return(&model.Customer{Id: tt.id}, nil)
+				Return(&model.Customer{ID: tt.id}, nil)
 
 			customerDeleterMock := mocks.NewCustomerDeleter(t)
 			customerDeleterMock.

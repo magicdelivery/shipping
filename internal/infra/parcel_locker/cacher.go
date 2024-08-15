@@ -24,11 +24,11 @@ type RedisCacher struct {
 }
 
 func NewRedisCacher(config *config.Config) *RedisCacher {
-	rdb := storage.NewRedisClient(config)
+	rdb := storage.NewRedisClient(&config.RedisStorage)
 	redis_store := redis_store.NewRedis(rdb)
 	cacheManager := cache.New[any](redis_store)
 	marshaler := marshaler.New(cacheManager)
-	exp := time.Duration(config.ParcelLockerService.CacheTtl) * time.Second
+	exp := time.Duration(config.ParcelLockerService.CacheTTL) * time.Second
 	return &RedisCacher{
 		marshaler: marshaler,
 		exp:       exp,

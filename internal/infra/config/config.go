@@ -18,8 +18,8 @@ type RedisStorage struct {
 }
 
 type ParcelLockerService struct {
-	EndpointUrl string `yaml:"endpoint_url"`
-	CacheTtl    int    `yaml:"cache_ttl"`
+	EndpointURL string `yaml:"endpoint_url"`
+	CacheTTL    int    `yaml:"cache_ttl"`
 }
 
 type Config struct {
@@ -55,7 +55,7 @@ func loadFromEnv(config *Config) *Config {
 	config.App.ListenAddr = GetStrEnv("APP_LISTEN_ADDR", config.App.ListenAddr)
 	config.RedisStorage.Host = GetStrEnv("REDIS_HOST", config.RedisStorage.Host)
 	config.RedisStorage.Port = GetIntEnv("REDIS_PORT", config.RedisStorage.Port)
-	config.ParcelLockerService.EndpointUrl = GetStrEnv("PARCEL_LOCKER_SERVICE_ENDPOINT_URL", config.ParcelLockerService.EndpointUrl)
-	config.ParcelLockerService.CacheTtl = GetIntEnv("PARCEL_LOCKER_CACHE_TTL", config.ParcelLockerService.CacheTtl)
+	config.ParcelLockerService.EndpointURL = GetStrEnv("PARCEL_LOCKER_SERVICE_ENDPOINT_URL", config.ParcelLockerService.EndpointURL)
+	config.ParcelLockerService.CacheTTL = GetIntEnv("PARCEL_LOCKER_CACHE_TTL", config.ParcelLockerService.CacheTTL)
 	return config
 }

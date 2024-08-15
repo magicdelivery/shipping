@@ -11,7 +11,7 @@ import (
 
 func SetupRouter(config *config.Config) *gin.Engine {
 	r := gin.Default()
-	loader, saver, deleter := storage.DefaultServices(config)
+	loader, saver, deleter := storage.DefaultServices(&config.RedisStorage)
 	plClient := parcel_locker.NewParcelLockerClient(config)
 
 	r.GET("/ping", func(c *gin.Context) { action.Ping(c) })

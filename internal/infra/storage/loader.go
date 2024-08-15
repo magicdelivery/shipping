@@ -34,7 +34,7 @@ func (rl *RedisLoader) LoadCustomerById(ctx context.Context, id string) (*model.
 
 	createdAt, _ := strconv.ParseInt(customerRes["CreatedAt"], 10, 64)
 	customer := model.Customer{
-		Id:        customerRes["Id"],
+		ID:        customerRes["Id"],
 		Name:      customerRes["Name"],
 		Address:   nil,
 		CreatedAt: createdAt,
@@ -59,7 +59,7 @@ func (rl *RedisLoader) LoadCustomerById(ctx context.Context, id string) (*model.
 				return nil, err
 			}
 			address := model.ShippingAddress{
-				Id:        addressRes["Id"],
+				ID:        addressRes["Id"],
 				City:      addressRes["City"],
 				Street:    addressRes["Street"],
 				Longitude: longitude,

@@ -29,7 +29,7 @@ func TestLoadCustomerById(t *testing.T) {
 		{
 			name:             "Happy Path",
 			id:               "1",
-			mockReturn:       &model.Customer{Id: "1", Name: "user_1", CreatedAt: 10000001},
+			mockReturn:       &model.Customer{ID: "1", Name: "user_1", CreatedAt: 10000001},
 			mockErr:          nil,
 			expectedStatus:   http.StatusOK,
 			expectedResponse: map[string]interface{}{"customer": map[string]interface{}{"address": nil, "id": "1", "name": "user_1", "created_at": float64(10000001)}},

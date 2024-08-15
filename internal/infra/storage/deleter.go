@@ -26,7 +26,7 @@ func (rd *RedisDeleter) DeleteCustomer(ctx context.Context, id string) error {
 	}
 
 	if customer.Address != nil {
-		if err := rd.rdb.Unlink(ctx, makeCustomerAddressId(customer.Address.Id)).Err(); err != nil {
+		if err := rd.rdb.Unlink(ctx, makeCustomerAddressId(customer.Address.ID)).Err(); err != nil {
 			return err
 		}
 	}

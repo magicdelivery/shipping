@@ -62,11 +62,11 @@ func TestSaveCustomer_FailOnSave(t *testing.T) {
 		Return(fmt.Errorf("some redis error"))
 
 	customerInput := model.Customer{
-		Id:        "1",
+		ID:        "1",
 		Name:      "user_1",
 		CreatedAt: 10000001,
 		Address: &model.ShippingAddress{
-			Id:        "1",
+			ID:        "1",
 			City:      "Riga",
 			Street:    "Brivibas str 1",
 			Longitude: 59.0,
@@ -107,11 +107,11 @@ func TestSaveCustomer_HappyPath(t *testing.T) {
 	customerSaverMock := mocks.NewCustomerSaver(t)
 
 	customerInput := model.Customer{
-		Id:        "1",
+		ID:        "1",
 		Name:      "user_1",
 		CreatedAt: 10000001,
 		Address: &model.ShippingAddress{
-			Id:        "1",
+			ID:        "1",
 			City:      "Riga",
 			Street:    "Brivibas str 1",
 			Longitude: 59.0,
