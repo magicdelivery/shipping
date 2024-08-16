@@ -24,10 +24,12 @@ func (rl *RedisLoader) LoadCustomerById(ctx context.Context, id string) (*model.
 	if err := customerHGetAll.Err(); err != nil {
 		return nil, err
 	}
+	
 	customerRes, err := customerHGetAll.Result()
 	if err != nil {
 		return nil, err
 	}
+
 	if len(customerRes) == 0 {
 		return nil, nil
 	}
@@ -45,19 +47,23 @@ func (rl *RedisLoader) LoadCustomerById(ctx context.Context, id string) (*model.
 		if err := addressHGetAll.Err(); err != nil {
 			return nil, err
 		}
+
 		addressRes, err := addressHGetAll.Result()
 		if err != nil {
 			return nil, err
 		}
+
 		if len(addressRes) > 0 {
 			longitude, err := strconv.ParseFloat(addressRes["Longitude"], 64)
 			if err != nil {
 				return nil, err
 			}
+
 			latitude, err := strconv.ParseFloat(addressRes["Latitude"], 64)
 			if err != nil {
 				return nil, err
 			}
+
 			address := model.ShippingAddress{
 				ID:        addressRes["Id"],
 				City:      addressRes["City"],
