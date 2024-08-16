@@ -60,6 +60,7 @@ jobs:
       with:
         file: ./deploy/docker/app/Dockerfile
         push: true
+        platforms: linux/amd64,linux/arm64,linux/arm/v7
         tags: tnsoftbear/md-ship-app:latest
 
 
