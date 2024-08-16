@@ -43,11 +43,13 @@ func loadFromYaml(config *Config, configPath string) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	defer file.Close()
 	d := yaml.NewDecoder(file)
 	if err := d.Decode(&config); err != nil {
 		return nil, err
 	}
+
 	return config, nil
 }
 
