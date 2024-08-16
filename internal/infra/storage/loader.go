@@ -47,6 +47,7 @@ func (rl *RedisLoader) LoadCustomerById(ctx context.Context, id string) (*model.
 		if err := addressHGetAll.Err(); err != nil {
 			return nil, err
 		}
+		
 		addressRes, err := addressHGetAll.Result()
 		if err != nil {
 			return nil, err
