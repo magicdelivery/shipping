@@ -11,9 +11,9 @@ on:
     branches:
       - main
 
-# permissions:
-#   contents: read     # Чтение содержимого репозитория
-#   packages: write    # Публикация в GitHub Container Registry
+permissions:
+  contents: read     # Чтение содержимого репозитория
+  packages: write    # Публикация в GitHub Container Registry
 
 jobs:
   publish-to-repo:
