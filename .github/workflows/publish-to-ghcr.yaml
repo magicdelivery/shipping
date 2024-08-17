@@ -1,14 +1,26 @@
 name: publish-to-ghcr
 
+# on:
+#   workflow_run:
+#     workflows: ["unit-testing"]
+#     types:
+#       - completed
+
 on:
-  workflow_run:
-    workflows: ["unit-testing"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
+
+# permissions:
+#   contents: read     # Чтение содержимого репозитория
+#   packages: write    # Публикация в GitHub Container Registry
 
 jobs:
   publish-to-repo:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.event == 'push' }}
+    # if: >
+    #   ${{ github.event.workflow_run.conclusion == 'success' 
+    #   && github.event.workflow_run.head_branch == 'main' 
+    #   && github.event.workflow_run.event == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,7 +30,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
     #   - name: Build and push Docker image
@@ -29,6 +41,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-            file: ./deploy/docker/app/Dockerfile
-            push: true
-            tags: ghcr.io/${{ github.repository }}/md-ship-app:latest
+          file: ./deploy/docker/app/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}/md-ship-app:latest
