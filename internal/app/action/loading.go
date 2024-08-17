@@ -57,7 +57,6 @@ func FindParcelLockersByCustomerId(
 			ctx.JSON(http.StatusInternalServerError, gin.H{"id": id, "message": err.Error()})
 			return
 		}
-
 		ctx.JSON(http.StatusOK, gin.H{"parcel_lockers": parcel_lockers})
 	}
 }
