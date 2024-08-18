@@ -29,6 +29,7 @@ jobs:
       uses: actions/checkout@v4.1.7
      
     - name: Run Test
+      id: run-unit-tests
       run: make test
 
     - name: Coverage percentage threshold check
