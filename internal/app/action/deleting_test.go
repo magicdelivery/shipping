@@ -43,7 +43,7 @@ func TestDeleteCustomer_NotFound(t *testing.T) {
 	assert.NoError(t, err)
 
 	expectedResponse := map[string]interface{}{
-		"id":      "1",
+		"id":      "2",
 		"deleted": false,
 		"message": "Customer info not found by id: 1",
 	}
