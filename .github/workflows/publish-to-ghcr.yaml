@@ -12,7 +12,6 @@ on:
       - completed
 
 permissions:
-#   contents: read     # Чтение содержимого репозитория
   packages: write    # Публикация в GitHub Container Registry
 
 jobs:
@@ -32,11 +31,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-    #   - name: Build and push Docker image
-    #     run: |
-    #       docker build -t ghcr.io/${{ github.repository }}/md-ship-app:latest -f .
-    #       docker push ghcr.io/${{ github.repository }}/md-ship-app:latest
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
