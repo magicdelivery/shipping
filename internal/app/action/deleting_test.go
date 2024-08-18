@@ -50,6 +50,7 @@ func TestDeleteCustomer_NotFound(t *testing.T) {
 	assert.Equal(t, expectedResponse, response)
 
 	customerLoaderMock.AssertExpectations(t)
+
 	// Do not check call of DeleteCustomer, since we don't call it in this scenario
 }
 
