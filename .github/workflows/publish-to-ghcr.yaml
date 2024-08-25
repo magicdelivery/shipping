@@ -7,7 +7,7 @@ name: publish-to-ghcr
 
 on:
   workflow_run:
-    workflows: ["unit-testing"]
+    workflows: ["verify"]
     types:
       - completed
 
