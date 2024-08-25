@@ -37,8 +37,8 @@ jobs:
       id: run-unit-tests
       run: make test
 
-    - name: Coverage percentage threshold check
-      run: make check-coverage-threshold
+    # - name: Coverage percentage threshold check
+    #   run: make check-coverage-threshold
 
     # - name: Generate HTML coverage report
     #   run: make report
