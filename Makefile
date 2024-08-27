@@ -6,7 +6,7 @@ REPORT_FILE ?= coverage.html
 build: ## Build docker containers
 	docker compose $(cf) build
 up: ## Start docker containers
-	docker compose $(cf) up -d
+	docker compose $(cf) up -d --remove-orphans
 down: ## Stop docker containers
 	docker compose $(cf) down
 rebuild: ## Rebuild and start docker containers
