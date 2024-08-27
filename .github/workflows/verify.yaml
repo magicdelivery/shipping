@@ -92,3 +92,4 @@ jobs:
   #       uses: actions/checkout@v4.1.7
 
   #     - name: Build
+  #       run: go build -o shipping_service ./cmd/shipping_service.go
