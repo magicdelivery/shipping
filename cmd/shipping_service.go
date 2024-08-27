@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"log"
-	"shipping/internal/app/route"
 	"shipping/internal/infra/config"
+	"shipping/internal/infra/http"
 )
 
 func main() {
@@ -15,8 +15,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	r := route.SetupRouter(config)
-	if err := r.Run(config.App.ListenAddr); err != nil {
-		log.Fatalf("Cannot run http server, %s", err)
-	}
+
+	http.RunServer(config)
 }
