@@ -3,9 +3,16 @@ af = -f deploy/docker/compose-api-test.yaml
 COVER_FILE ?= coverage.out
 REPORT_FILE ?= coverage.html
 
+# Run in docker 
+
+init: ## Initialize environement variables
+	@if [ ! -f ./deploy/docker/.env ]; then \
+		cp ./deploy/docker/.env.sample ./deploy/docker/.env; \
+		echo "Adjust configuration in ./deploy/docker/.env"; \
+	fi;
 build: ## Build docker containers
 	docker compose $(cf) build
-up: ## Start docker containers
+up: init ## Start docker containers
 	docker compose $(cf) up -d --remove-orphans
 down: ## Stop docker containers
 	docker compose $(cf) down
@@ -13,11 +20,24 @@ rebuild: ## Rebuild and start docker containers
 	@make down
 	@make build
 	@make up
-api-test: ## Build and start docker services and run API testing on them
+restart: ## Restart docker containers
+	docker compose $(cf) restart
+
+# Hurl API testing in docker
+
+apitestbuild: ## Build containers for API testing
 	docker compose $(af) build
-	docker compose $(af) -p mdtest up -d
-	docker run --rm -v .\test\:/test --net md-ship-public ghcr.io/orange-opensource/hurl:latest --test --color --variables-file=/test/api/docker-vars /test/api/customer.hurl
-	docker compose $(af) -p mdtest down
+apitestup: ## Start containers for API testing
+	docker compose $(af) up -d --remove-orphans
+apitestdown: ## Stop containers for API testing
+	docker compose $(af) down
+apitestrun: ## Run Hurl testing scripts in docker container and in mutual network
+	docker run --rm -v ./test/:/test --net md-ship-public ghcr.io/orange-opensource/hurl:latest --test --color --variables-file=/test/api/docker-vars /test/api/customer.hurl
+apitest: ## Build and start docker services and run API testing on them
+	@make apitestbuild
+	@make apitestup
+	@make apitestrun
+	@make apitestdown
 
 ## Local development
 
@@ -58,7 +78,11 @@ hurl: ## Run hurl API testing on localhost installation
 	hurl --variables-file=.\test\api\local-vars .\test\api\customer.hurl
 
 .PHONY: \
-	api-test \
+	apitest \
+	apitestbuild \
+	apitestdown \
+	apitestrun \
+	apitestup \
 	build \
 	check-coverage-threshold \
 	clean \

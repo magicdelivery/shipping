@@ -21,7 +21,7 @@ services:
     extends:
       file: compose.yaml
       service: ship-redis-populator
-    entrypoint: ["/redis-populator/populate.sh", "/redis-populator/api-test-data.txt"]
+    entrypoint: ["sh", "/redis-populator/populate.sh", "/redis-populator/api-test-data.txt"]
     depends_on:
     - ship-redis-storage
 
