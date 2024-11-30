@@ -31,7 +31,7 @@ func TestDeleteCustomer_NotFound(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	r.DELETE("/customer/:id", func(c *gin.Context) {
-		DeleteCustomer(c, customerDeleterMock, customerLoaderMock)
+		DeleteCustomer(customerDeleterMock, customerLoaderMock)(c)
 	})
 	// Act
 	r.ServeHTTP(w, req)
@@ -99,7 +99,7 @@ func TestDeleteCustomer_Found(t *testing.T) {
 			w := httptest.NewRecorder()
 
 			r.DELETE("/customer/:id", func(c *gin.Context) {
-				DeleteCustomer(c, customerDeleterMock, customerLoaderMock)
+				DeleteCustomer(customerDeleterMock, customerLoaderMock)(c)
 			})
 
 			// Act

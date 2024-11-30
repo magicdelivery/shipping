@@ -66,7 +66,7 @@ func TestLoadCustomerById(t *testing.T) {
 			w := httptest.NewRecorder()
 
 			r.GET("/customer/:id", func(c *gin.Context) {
-				LoadCustomerById(c, customerLoaderMock)
+				LoadCustomerById(customerLoaderMock)(c)
 			})
 
 			// Act

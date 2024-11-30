@@ -1,14 +1,14 @@
 networks:
-  ship-public:
+  public:
     labels:
     - "app-identity=delivery-magic"
     - "app-network=ship-public"
     name: md-ship-public
-  ship-redis:
+  redis:
     labels:
     - "app-identity=delivery-magic"
     - "app-network=ship-redis"
     name: md-ship-redis
-  pl-public:
+  md-pl-public:
     name: md-pl-public
     external: true

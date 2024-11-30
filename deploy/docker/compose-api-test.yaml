@@ -2,31 +2,31 @@ include:
 - compose-base.yaml
 
 services:
-  ship-app:
+  app:
     extends:
       file: compose.yaml
-      service: ship-app
+      service: app
     depends_on:
-    - ship-redis-storage
+    - redis-storage
 
-  ship-redis-storage:
+  redis-storage:
     extends:
       file: compose.yaml
-      service: ship-redis-storage
+      service: redis-storage
     volumes:
-    - ship-redis-api-test-data:/data
+    - redis-api-test-data:/data
     - ./redis-storage/redis.conf:/usr/local/etc/redis/redis.conf
 
-  ship-redis-populator:
+  redis-populator:
     extends:
       file: compose.yaml
-      service: ship-redis-populator
+      service: redis-populator
     entrypoint: ["sh", "/redis-populator/populate.sh", "/redis-populator/api-test-data.txt"]
     depends_on:
-    - ship-redis-storage
+    - redis-storage
 
 volumes:
-  ship-redis-api-test-data:
+  redis-api-test-data:
     labels:
     - "app-identity=delivery-magic"
     - "app-volume=ship-redis-api-test-data"

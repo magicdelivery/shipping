@@ -1,10 +1,10 @@
 include:
   - compose-base.yaml
 
-name: md
+name: md-ship
 
 services:
-  ship-app:
+  app:
     annotations:
       com.chillysoftware.md.ship.app.lang: go
     build:
@@ -12,10 +12,10 @@ services:
       dockerfile: ./deploy/docker/app/Dockerfile
     container_name: md-ship-app
     depends_on:
-      ship-redis-storage:
+      redis-storage:
         condition: service_healthy
     env_file:
-      - path: ./.env
+      - path: "./.env"
         required: true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
@@ -27,15 +27,15 @@ services:
       - "app-identity=magic-delivery"
       - "app-service=md-ship-app"
     networks:
-      - ship-public
-      - ship-redis
-      - pl-public
+      - public
+      - redis
+      - md-pl-public
     ports:
       - "8080:8080/tcp"
     read_only: true
     restart: unless-stopped
 
-  ship-redis-storage:
+  redis-storage:
     container_name: md-ship-redis-storage
     entrypoint: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     healthcheck:
@@ -49,16 +49,16 @@ services:
       - "app-identity=magic-delivery"
       - "app-service=md-ship-redis-storage"
     networks:
-      - ship-redis
+      - redis
     restart: unless-stopped
     volumes:
-      - ship-redis-data:/data
+      - redis-data:/data
       - ./redis-storage/redis.conf:/usr/local/etc/redis/redis.conf
 
-  ship-redis-populator:
+  redis-populator:
     container_name: md-ship-redis-populator
     depends_on:
-      - ship-redis-storage
+      - redis-storage
     entrypoint: ["bash", "/redis-populator/populate.sh", "/redis-populator/data.txt"]
     env_file:
       - ./.env
@@ -67,15 +67,15 @@ services:
       - "app-identity=magic-delivery"
       - "app-service=md-ship-redis-populator"
     networks:
-      - ship-redis
+      - redis
     volumes:
       - ./redis-populator:/redis-populator
     read_only: true
 
-  ship-redis-backup:
+  redis-backup:
     container_name: md-ship-redis-backup
     depends_on:
-      - ship-redis-storage
+      - redis-storage
     entrypoint: ["/snapshot-backup.sh"]
     environment:
       - BACKUP_PERIOD=10
@@ -84,16 +84,16 @@ services:
     restart: unless-stopped
     volumes:
       - ./redis-backup/snapshot-backup.sh:/snapshot-backup.sh
-      - ship-redis-data:/data:ro
-      - ship-backup:/backup
+      - redis-data:/data:ro
+      - backup:/backup
 
 volumes:
-  ship-backup:
+  backup:
     name: md-ship-backup
     labels:
       - "app-identity=magic-delivery"
       - "app-volume=md-ship-backup"
-  ship-redis-data:
+  redis-data:
     name: md-ship-redis-data
     labels:
       - "app-identity=magic-delivery"

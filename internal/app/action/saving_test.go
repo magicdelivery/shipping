@@ -31,7 +31,7 @@ func TestSaveCustomer_FailOnBindJson(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	r.POST("/customer", func(c *gin.Context) {
-		SaveCustomer(c, customerSaverMock)
+		SaveCustomer(customerSaverMock)(c)
 	})
 
 	// Act
@@ -80,7 +80,7 @@ func TestSaveCustomer_FailOnSave(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	r.POST("/customer", func(c *gin.Context) {
-		SaveCustomer(c, customerSaverMock)
+		SaveCustomer(customerSaverMock)(c)
 	})
 
 	// Act
@@ -131,7 +131,7 @@ func TestSaveCustomer_HappyPath(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	r.POST("/customer", func(c *gin.Context) {
-		SaveCustomer(c, customerSaverMock)
+		SaveCustomer(customerSaverMock)(c)
 	})
 
 	// Act

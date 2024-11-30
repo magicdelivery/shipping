@@ -12,7 +12,7 @@ init: ## Initialize environement variables
 	fi;
 build: ## Build docker containers
 	docker compose $(cf) build
-up: init ## Start docker containers
+up: init ## Start docker containers	
 	docker compose $(cf) up -d --remove-orphans
 down: ## Stop docker containers
 	docker compose $(cf) down
@@ -27,7 +27,7 @@ restart: ## Restart docker containers
 
 apitestbuild: ## Build containers for API testing
 	docker compose $(af) build
-apitestup: ## Start containers for API testing
+apitestup: ## Start containers for API testing 
 	docker compose $(af) up -d --remove-orphans
 apitestdown: ## Stop containers for API testing
 	docker compose $(af) down
